@@ -1,0 +1,55 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:15
+    container_name: testovoe_db_app
+    env_file:
+      - .env-four-testing
+    command: -p 5432
+    expose:
+      - 5432
+    environment:
+      - "POSTGRES_HOST_AUTH_METHOD=trust"
+
+  redis:
+    image: redis:7
+    container_name: testovoe_redis
+    env_file:
+      - .env-four-testing
+
+  testovoe_app:
+    build:
+      context: .
+    env_file:
+      - .env-four-testing
+    container_name: testovoe_app
+    command: ['/testovoe/scripts/docker_app.sh']
+    ports:
+    - 8888:8000
+    depends_on:
+      - db
+      - redis
+      - celery
+
+
+  celery:
+    build:
+      context: .
+    env_file:
+      - .env-four-testing
+    container_name: testovoe_celery
+    command: celery -A src.broker.tasks:celery worker --loglevel=INFO
+
+
+  testovoe_celery_beat:
+    build:
+      context: .
+    container_name: testovoe_celery_beat
+    depends_on:
+      - testovoe_app
+      - celery
+      - redis
+    command: ['/testovoe/scripts/docker_celery_beat.sh']
+    env_file:
+      - .env-four-testing
