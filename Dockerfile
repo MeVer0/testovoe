@@ -11,5 +11,3 @@ RUN pip install -r requirements.txt
 COPY . .
 
 RUN chmod a+x scripts/*.sh
-
-CMD python3.11 src/broker/tasks.py monitoring_on_map_russia
