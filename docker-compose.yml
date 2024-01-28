@@ -26,7 +26,7 @@ services:
     container_name: testovoe_app
     command: bash -c "alembic upgrade head && gunicorn src.api.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8000"
     ports:
-    - 8888:8000
+    - 9999:8000
     depends_on:
       - db
       - redis
@@ -39,7 +39,7 @@ services:
     env_file:
       - .env-four-testing
     container_name: testovoe_celery
-    command: celery -A src.broker.tasks:celery worker --loglevel=INFO
+    command: bash -c "celery -A src.broker.tasks:celery worker --loglevel=INFO && python3 src/parser/main.py"
 
 
   testovoe_celery_beat:

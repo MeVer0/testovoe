@@ -6,7 +6,7 @@ from src.api.map.router import router as city_router
 from src.api.shop.router import router as shop_router
 from src.api.admin.router import router as admin_router
 from src.auth.schemas import UserRead, UserCreate
-
+from src.auth.router import router as custom_auth_router
 
 app = FastAPI()
 
@@ -47,6 +47,12 @@ app.include_router(
     prefix="/auth",
     tags=["auth"],
 )
+
+app.include_router(
+    custom_auth_router
+                   )
+
+
 
 
 if __name__ == "__main__":
