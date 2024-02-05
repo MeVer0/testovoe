@@ -1,9 +1,8 @@
 import datetime
-from typing import Annotated
-from sqlalchemy import ForeignKey, UniqueConstraint, Index, VARCHAR, Time
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import UniqueConstraint, Index
+from sqlalchemy.orm import Mapped, relationship
 
-from src.models import Base, intpk, varchar_50, varchar_10, date_create_truncated
+from src.models import Base, intpk, varchar_50, varchar_10
 
 
 class ShopOrm(Base):
@@ -18,6 +17,11 @@ class ShopOrm(Base):
     open_time: Mapped[datetime.time]
     close_time: Mapped[datetime.time]
 
-    __table_args__ = (UniqueConstraint('city_id', 'street_id', 'building'),)
-    __table_args__ += (Index('idx_open_close_time', 'open_time', 'close_time'),)
-    __table_args__ += (Index('idx_shop_name', 'name'),)
+    __table_args__ = (
+        UniqueConstraint('city_id', 'street_id', 'building'),
+        Index('idx_open_close_time', 'open_time', 'close_time'),
+        Index('idx_shop_name', 'name')
+    )
+
+    city = relationship('CityOrm', lazy='raise')
+    street = relationship('StreetOrm', lazy='raise')
