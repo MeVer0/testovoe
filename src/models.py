@@ -1,12 +1,12 @@
-from sqlalchemy.orm import DeclarativeBase, relationship
-
-from datetime import datetime, time
 from typing import Annotated
+from datetime import datetime, time
 
-from sqlalchemy import text, VARCHAR, PrimaryKeyConstraint, Column, Integer, ForeignKey, Boolean
+from sqlalchemy import text, VARCHAR
 from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import DeclarativeBase
 
 
+# Заранее хардкодить все типы, которые могут тебе пригодиться - не очень
 intpk = Annotated[int, mapped_column(primary_key=True, autoincrement=True)]
 date_create = Annotated[datetime, mapped_column(server_default=text('CURRENT_TIMESTAMP()'))]
 date_create_truncated = Annotated[time, mapped_column(server_default=text("date_trunc('minute', current_timestamp)"))]
